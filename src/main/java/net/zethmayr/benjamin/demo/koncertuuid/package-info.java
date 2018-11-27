@@ -20,6 +20,11 @@
  * if it’s over 40 characters long – then it should be truncated.
  * </pre>
  * <ul><li>ok</li></ul>
+ *
+ * <ul>
+ *     <li>A couple things from this: We are not generating anything like standard UUIDs</li>
+ *     <li>We need to be working in a type capable of 40 decimal digits. Maybe BigInteger not long</li>
+ * </ul>
  * <pre>
  *
  *
@@ -43,6 +48,8 @@
  *     <li>A long represents a real number with (2<sup>64</sup>) valid representable states</li>
  *     <li>A double represents a real number with (2<sup>64</sup> - a couple) valid representable states</li>
  *     <li>So I will use a long, then, it's as real as a double and it also happens to have definitions of even and odd</li>
+ *     <li>and it doesn't eat n < epsilon on addition either</li>
+ *     <li>See length requirements... maybe we mean BigInteger</li>
  * </ul>
  * <pre>
  *
@@ -89,6 +96,7 @@
  * And we are all out of salient problem statement.
  * Rules 1, 2, 3, and 4 are all direct rules which involve the number
  * Rules 5 and 6 are not.
+ * Rule 5 would only apply if its term was at least 5? This seems excessively strange.
  * Rule 1 destroys the results of all rules, when it is run. It also includes the special wordings "start with",
  * and "the base".
  * Rule 4 doesn't appear to have any effect on the number, but affects the execution time. It is tempting to optimize it out.
@@ -104,8 +112,25 @@
  * as rule 3. It appears far from trivial to determine how often they AFFECT a number, though.
  * It is unclear if rule 6 is considered to be in effect when z==5, which is probably the case where it is most in question.
  * If Rule 6 is in effect, we will need to maintain counters within rules 2 and 3 OR prove that either 2 or 3 will affect
- * a number more than half the time. Half or more of longs are even. We're good.
+ * a number more than half the time. Half or more of longs are even.
+ * But hold on, z might in fact be less than 5. If rule 2 runs AT ALL, though, rule 6 is satisfied.
+ * We also do not break the contract for Z by forcing it to 5 if it is less, since it only specifies a minimum.
+ *
+ * Note that the expectation that rule 1 will affect the outcome more than half the time is only statistically valid.
+ * And, it doesn't hold well. So, we will bump the minimum z to 3 - without affecting our contract on z. It has still specified
+ * a minimum.
  *
  * 3:41 with slight interruption, analysis of problem statement
+ *
+ * 3:50, interruptions becoming significant. It occurs that Rule 1 is loosely stated enough to allow for generating numbers
+ * in a more convenient range, say, 30-40 decimal digits. This does not remove all padding and truncation concern
+ *
+ * 4:15 - hard break, as dinner is trying to be a thing right now
+ *
+ * So I came back around, 6:30 maybe? I remember noting that it was now slightly more than 4 hours absolute from seeing
+ * the problem statement, but I have not been uninterrupted.
+ *
+ * It is now 8:43pm, so I am almost out of time even considering breaks. However, adding the controller and its tests is
+ * pretty much algoristic.
  */
 package net.zethmayr.benjamin.demo.koncertuuid;
