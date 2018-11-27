@@ -10,15 +10,9 @@ import static org.hamcrest.Matchers.isA;
 import static org.junit.Assert.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = RANDOM_PORT)
-public class ApplicationTest {
-
-    @Autowired
-    private Application underTest;
-
+public class ApplicationStaticTest {
     @Test
-    public void wires() {
-        assertThat(underTest, isA(Application.class));
+    public void mainRuns() {
+        Application.main();
     }
 }
